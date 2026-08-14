@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Merge Conflict Counselling — Page not found</title>
+<meta name="description" content="This page could not be found. You are not lost. You are detached, which is a state, not a verdict.">
+<meta name="robots" content="noindex, follow">
+<meta name="theme-color" content="#17211B">
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48 32x32 16x16">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+<style>
+  /* Same faces as index.html, same paths, so the browser reuses the cached
+     files rather than fetching them again for one short page. */
+  @font-face { font-family: "Fraunces"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("/fonts/fraunces-variable.woff2") format("woff2"); }
+  @font-face { font-family: "Fraunces"; font-style: italic; font-weight: 100 900; font-display: swap; src: url("/fonts/fraunces-variable-italic.woff2") format("woff2"); }
+  @font-face { font-family: "Karla"; font-style: normal; font-weight: 400 600; font-display: swap; src: url("/fonts/karla-variable.woff2") format("woff2"); }
+  @font-face { font-family: "IBM Plex Mono"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/ibm-plex-mono-400.woff2") format("woff2"); }
+  @font-face { font-family: "IBM Plex Mono"; font-style: normal; font-weight: 500; font-display: swap; src: url("/fonts/ibm-plex-mono-500.woff2") format("woff2"); }
+</style>
+<style>
+  /* A trimmed subset of index.html's tokens and type. Kept in sync by hand;
+     there are only two pages, and a shared stylesheet for one heading and a
+     paragraph would be more moving parts than it saves. */
+  :root {
+    --pine: #17211B;
+    --hairline: #2C382E;
+    --cream: #F4EFE4;
+    --dim: #9EA898;
+    --brass: #C69A5D;
+    --serif: "Fraunces", Georgia, serif;
+    --sans: "Karla", -apple-system, sans-serif;
+    --mono: "IBM Plex Mono", monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { background: var(--pine); }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+
+  body {
+    background: var(--pine);
+    color: var(--cream);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.7;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  ::selection { background: var(--brass); color: var(--pine); }
+
+  a { color: var(--cream); }
+  a:focus-visible { outline: 2px solid var(--brass); outline-offset: 3px; }
+
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 28px; width: 100%; }
+
+  header { padding: 26px 0; border-bottom: 1px solid var(--hairline); }
+  .brand {
+    font-family: var(--serif);
+    font-optical-sizing: auto;
+    font-weight: 480;
+    font-size: 1.22rem;
+    text-decoration: none;
+    color: var(--cream);
+  }
+  .brand span { color: var(--brass); font-style: italic; font-weight: 420; }
+
+  main { flex: 1; display: flex; align-items: center; padding: 72px 0 96px; }
+  .panel { max-width: 680px; }
+
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: var(--mono);
+    font-weight: 500;
+    font-size: 0.68rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--brass);
+    animation: rise 0.7s 0.05s ease both;
+  }
+  .eyebrow::before { content: ""; width: 34px; height: 1px; background: var(--brass); }
+
+  h1 {
+    margin-top: 22px;
+    font-family: var(--serif);
+    font-optical-sizing: auto;
+    font-weight: 370;
+    font-size: clamp(2.1rem, 4.6vw, 3.1rem);
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+    animation: rise 0.7s 0.14s ease both;
+  }
+
+  .lede {
+    margin-top: 20px;
+    font-size: 1.1rem;
+    color: var(--dim);
+    max-width: 50ch;
+    animation: rise 0.7s 0.24s ease both;
+  }
+  .lede em { font-family: var(--serif); font-style: italic; color: var(--brass); }
+
+  .aside {
+    margin-top: 40px;
+    max-width: 560px;
+    background: #241E14;
+    border: 1px solid #3C3320;
+    border-radius: 8px;
+    padding: 26px 30px;
+    font-size: 0.95rem;
+    color: var(--dim);
+    animation: rise 0.7s 0.34s ease both;
+  }
+  .aside .line {
+    margin-top: 16px;
+    width: fit-content;
+    font-family: var(--mono);
+    font-size: 0.9rem;
+    color: var(--brass);
+    background: #141A15;
+    border-radius: 6px;
+    padding: 12px 16px;
+  }
+
+  .back { margin-top: 36px; font-size: 0.95rem; animation: rise 0.7s 0.44s ease both; }
+  .back a { color: var(--brass); }
+
+  footer { border-top: 1px solid var(--hairline); padding: 30px 0 42px; }
+  footer .sig { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 1.05rem; color: var(--cream); }
+
+  @keyframes rise { from { opacity: 0; transform: translateY(16px); } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="brand" href="/">Merge Conflict <span>Counselling</span></a>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="panel">
+      <div class="eyebrow">404</div>
+
+      <!--
+        Three drafts of the same thought. One is live; the other two are
+        parked here rather than in a chat log. Swap by moving the comment.
+
+        ALTERNATIVE A — the ancestor variant:
+        <h1>This page could not be found.</h1>
+        <p class="lede">Nothing was lost. There is simply no <em>common ancestor</em>
+        between where you are and where you meant to be.</p>
+
+        ALTERNATIVE B — the absence variant:
+        <h1>This page could not be found.</h1>
+        <p class="lede">That is not a failure. It is an opportunity to sit
+        with <em>absence.</em></p>
+      -->
+
+      <h1>This page could not be found.</h1>
+      <p class="lede">You are not lost. You are <em>detached,</em> which is a state, not a verdict.</p>
+
+      <div class="aside">
+        When you are ready — and only then — you can return to where you were.
+        <div class="line">git checkout -</div>
+      </div>
+
+      <p class="back"><a href="/">Return to the practice</a></p>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="sig">— The Practice</div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,9 @@
+# Crawl freely, and at whatever pace feels sustainable for you.
+# Nothing here is confidential. Sessions are, and sessions are not on the web.
+
+User-agent: *
+Allow: /
+
+# There is no sitemap. There is one page, a second page for when you
+# cannot find it, and a crisis line. All are reachable from where you
+# are standing.

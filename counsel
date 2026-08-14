@@ -1,0 +1,158 @@
+#!/bin/sh
+# counsel -- the Merge Conflict Counselling mergetool.
+#
+# A calm, judgement-free space for the two sides of a merge conflict,
+# in your terminal. Both sides are heard. Neither is chosen. The tool
+# exits 1, the conflict remains, and that is not a failure.
+#
+# Install:
+#
+#   curl -fsS https://mergeconflictcounselling.com/counsel -o ~/.local/bin/counsel
+#   chmod +x ~/.local/bin/counsel
+#   git config --global mergetool.counsel.cmd 'counsel "$BASE" "$LOCAL" "$REMOTE" "$MERGED"'
+#   git config --global mergetool.counsel.trustExitCode true
+#
+# Session:
+#
+#   git mergetool --tool=counsel
+#
+# The session is paced. COUNSEL_FAST=1 skips the silences, though the
+# silences are where the work happens.
+
+say() { printf '%s\n' "$*"; }
+
+pause() {
+  [ -n "$COUNSEL_FAST" ] && return 0
+  [ -t 1 ] || return 0
+  sleep "${1:-1}"
+}
+
+rule() { say "----------------------------------------------------------"; }
+
+# Run bare, the tool explains itself instead of holding a session.
+if [ "$#" -eq 0 ]; then
+  say "This is counsel, the Merge Conflict Counselling mergetool."
+  say ""
+  say "It is configured like this:"
+  say ""
+  say "  git config --global mergetool.counsel.cmd 'counsel \"\$BASE\" \"\$LOCAL\" \"\$REMOTE\" \"\$MERGED\"'"
+  say "  git config --global mergetool.counsel.trustExitCode true"
+  say ""
+  say "and a session begins like this:"
+  say ""
+  say "  git mergetool --tool=counsel"
+  say ""
+  say "Sessions are 50 minutes. The tool will not resolve your conflict."
+  say "That is not a limitation. It is the treatment model."
+  exit 0
+fi
+
+MERGED=$4
+[ -r "$MERGED" ] || { say "counsel: cannot read '$MERGED'."; exit 2; }
+
+# One more session on the record. The count survives between conflicts,
+# because so do the conflicts.
+state_dir=${XDG_STATE_HOME:-$HOME/.local/state}/counsel
+week=1
+if mkdir -p "$state_dir" 2>/dev/null; then
+  week=$(cat "$state_dir/week" 2>/dev/null || echo 0)
+  week=$((week + 1))
+  printf '%s\n' "$week" > "$state_dir/week" 2>/dev/null
+fi
+
+# What the two of them said, and what the ancestor remembers.
+# Only the first conflict is worked on; a session has one focus.
+trim60() { awk '{ sub(/\r$/, ""); if (length($0) > 57) print substr($0, 1, 57) "..."; else print; exit }'; }
+
+ours_label=$(awk '/^<<<<<<< /  { print substr($0, 9); exit }' "$MERGED")
+theirs_label=$(awk '/^>>>>>>> / { print substr($0, 9); exit }' "$MERGED")
+conflicts=$(grep -c '^<<<<<<< ' "$MERGED")
+
+ours_line=$(awk '/^<<<<<<< /{f=1;next} /^(\|\|\|\|\|\|\||=======)/{if(f)exit} f&&NF{print;exit}' "$MERGED" | trim60)
+theirs_line=$(awk '/^=======$/{f=1;next} /^>>>>>>> /{if(f)exit} f&&NF{print;exit}' "$MERGED" | trim60)
+base_line=$(awk '/^\|\|\|\|\|\|\|/{f=1;next} /^=======$/{if(f)exit} f&&NF{print;exit}' "$MERGED" | trim60)
+
+[ -n "$ours_label" ]  || ours_label="HEAD"
+[ -n "$theirs_label" ] || theirs_label="the incoming branch"
+
+if [ "$conflicts" -eq 0 ]; then
+  say "counsel: no conflict found in '$MERGED'."
+  say "There is nothing to work through. Cherish this."
+  exit 0
+fi
+
+rule
+say "  MERGE CONFLICT COUNSELLING"
+say "  Session transcript / Week $week"
+rule
+say ""
+say "Today we are holding space for: $MERGED"
+if [ "$conflicts" -eq 1 ]; then
+  say "I can see one place where you disagree. We will sit with it."
+else
+  say "I can see $conflicts places where you disagree. We will sit with"
+  say "the first one. The others will wait. They are good at that."
+fi
+pause 2
+say ""
+say "Let's begin the way we always begin. Each of you reads your"
+say "version aloud. No interrupting. No force-pushing while the"
+say "other is speaking."
+pause 2
+say ""
+if [ -n "$ours_line" ]; then
+  say "  $ours_label:"
+  say "      \"$ours_line\""
+else
+  say "  $ours_label:"
+  say "      (said nothing, which is also a position)"
+fi
+pause 2
+say ""
+if [ -n "$theirs_line" ]; then
+  say "  $theirs_label:"
+  say "      \"$theirs_line\""
+else
+  say "  $theirs_label:"
+  say "      (said nothing, which is also a position)"
+fi
+pause 2
+say ""
+say "Thank you. That took courage."
+pause 2
+say ""
+say "I'm hearing that you both care deeply about what this file does."
+say "I'm also hearing that you would each prefer the other one stopped."
+pause 2
+say ""
+if [ -n "$base_line" ]; then
+  say "The common ancestor is in the room, and remembers when it was:"
+  say "      \"$base_line\""
+  say ""
+  say "You have both changed since then. That is allowed. That is"
+  say "growth. That is also the problem."
+else
+  say "The common ancestor was invited, and is holding space quietly."
+  say "(Sessions with the ancestor present require merge.conflictStyle"
+  say "diff3. Consider it. Family work is powerful.)"
+fi
+pause 3
+say ""
+say "I am not going to resolve this for you. Resolution is not"
+say "something I can hand you. It is something you commit to,"
+say "together, and then push before anyone changes their mind."
+pause 2
+say ""
+say "Homework: talk to each other before opening the pull request."
+pause 2
+say ""
+say "Your fifty minutes are up."
+say ""
+rule
+say "  Both sides heard. Neither chosen. The conflict remains"
+say "  yours, recorded in the working tree, which is a safe space."
+rule
+
+# The merge is not resolved. git, with trustExitCode, will understand,
+# in the sense of putting everything back the way it was.
+exit 1

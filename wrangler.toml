@@ -1,0 +1,22 @@
+# Cloudflare Pages project for mergeconflictcounselling.com
+#
+# Deploy with:  wrangler pages deploy .
+#
+# NOTE: Pages configuration does not support "account_id" -- Wrangler rejects
+# it outright ("Configuration file for Pages projects does not support
+# account_id"). The account is selected two other ways instead:
+#
+#   * locally, by the auth profile bound to this directory:
+#       wrangler auth activate personal
+#       wrangler whoami        # -> Active profile: personal
+#
+#   * in CI, by the CLOUDFLARE_ACCOUNT_ID environment variable.
+#
+# This machine has two Cloudflare identities, and an unbound directory falls
+# back to the wrong one. See the README before deploying.
+
+name = "mergeconflictcounselling"
+pages_build_output_dir = "."
+# Not today's date: this is the newest date the local workerd (wrangler
+# pages dev) can simulate, and /crisis has no need for anything newer.
+compatibility_date = "2026-08-08"

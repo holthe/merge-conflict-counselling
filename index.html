@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Merge Conflict Counselling — A safe space for your working tree</title>
+<meta name="description" content="A safe space for your working tree. Both sides heard. Neither chosen.">
+<meta name="robots" content="index, follow">
+
+<!-- PRODUCTION DOMAIN, hardcoded. If the site moves, change the four tags
+     below and the footer of tools/og.html, then re-run `make og`. Those are
+     the only two files that name it; nothing derives it. -->
+<link rel="canonical" href="https://mergeconflictcounselling.com/">
+<meta name="theme-color" content="#17211B">
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48 32x32 16x16">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Merge Conflict Counselling">
+<meta property="og:url" content="https://mergeconflictcounselling.com/">
+<meta property="og:title" content="Merge Conflict Counselling">
+<meta property="og:description" content="A safe space for your working tree. Both sides heard. Neither chosen.">
+<meta property="og:image" content="https://mergeconflictcounselling.com/og.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Merge Conflict Counselling: a safe space for your working tree. Therapy for branches in conflict.">
+<meta property="og:locale" content="en_US">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Merge Conflict Counselling">
+<meta name="twitter:description" content="A safe space for your working tree. Both sides heard. Neither chosen.">
+<meta name="twitter:image" content="https://mergeconflictcounselling.com/og.png">
+<meta name="twitter:image:alt" content="Merge Conflict Counselling: a safe space for your working tree. Therapy for branches in conflict.">
+<style>
+  /* Self-hosted, latin subset. Fraunces and Karla are variable fonts: one
+     file each covers every weight the page uses, plus a second Fraunces for
+     the italic axis. The page makes no requests to any external domain. */
+  @font-face { font-family: "Fraunces"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("/fonts/fraunces-variable.woff2") format("woff2"); }
+  @font-face { font-family: "Fraunces"; font-style: italic; font-weight: 100 900; font-display: swap; src: url("/fonts/fraunces-variable-italic.woff2") format("woff2"); }
+  @font-face { font-family: "Karla"; font-style: normal; font-weight: 400 600; font-display: swap; src: url("/fonts/karla-variable.woff2") format("woff2"); }
+  @font-face { font-family: "IBM Plex Mono"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/ibm-plex-mono-400.woff2") format("woff2"); }
+  @font-face { font-family: "IBM Plex Mono"; font-style: normal; font-weight: 500; font-display: swap; src: url("/fonts/ibm-plex-mono-500.woff2") format("woff2"); }
+</style>
+<style>
+  :root {
+    --pine: #17211B;
+    --pine-soft: #1D2921;
+    --hairline: #2C382E;
+    --cream: #F4EFE4;
+    --dim: #9EA898;
+    --brass: #C69A5D;
+    --paper: #F7F2E7;
+    --paper-edge: #EFE8D6;
+    --paper-rule: #DCD2B8;
+    --ink: #2C302C;
+    --head: #C4633E;
+    --incoming: #3E6EC4;
+    --serif: "Fraunces", Georgia, serif;
+    --sans: "Karla", -apple-system, sans-serif;
+    --mono: "IBM Plex Mono", monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; background: var(--pine); }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+
+  body {
+    background: var(--pine);
+    color: var(--cream);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.7;
+  }
+
+  ::selection { background: var(--brass); color: var(--pine); }
+
+  a { color: var(--cream); }
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--brass);
+    outline-offset: 3px;
+  }
+
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 28px; }
+
+  /* ---------- Header ---------- */
+  header { padding: 26px 0; border-bottom: 1px solid var(--hairline); }
+  .masthead { display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
+  .brand {
+    font-family: var(--serif);
+    font-optical-sizing: auto;
+    font-weight: 480;
+    font-size: 1.22rem;
+    text-decoration: none;
+    color: var(--cream);
+    letter-spacing: 0.005em;
+  }
+  .brand span { color: var(--brass); font-style: italic; font-weight: 420; }
+  nav { display: flex; gap: 30px; flex-wrap: wrap; align-items: center; }
+  nav a {
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--dim);
+  }
+  nav a:hover { color: var(--cream); }
+  .nav-cta {
+    background: var(--brass);
+    color: var(--pine) !important;
+    padding: 11px 22px;
+    border-radius: 999px;
+    font-weight: 600;
+  }
+  .nav-cta:hover { background: var(--cream); }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    display: grid;
+    grid-template-columns: 1.04fr 0.9fr;
+    gap: 80px;
+    align-items: center;
+    padding: 108px 28px 132px;
+  }
+  h1 {
+    font-family: var(--serif);
+    font-optical-sizing: auto;
+    font-weight: 370;
+    font-size: clamp(2.7rem, 5.2vw, 4.25rem);
+    line-height: 1.07;
+    letter-spacing: -0.012em;
+    animation: rise 0.7s 0.05s ease both;
+  }
+  h1 em { font-style: italic; font-weight: 340; color: var(--brass); }
+  .lede {
+    margin-top: 26px;
+    font-size: 1.12rem;
+    color: var(--dim);
+    max-width: 46ch;
+    animation: rise 0.7s 0.16s ease both;
+  }
+  .cta-row { margin-top: 38px; display: flex; gap: 16px; flex-wrap: wrap; animation: rise 0.7s 0.27s ease both; }
+  .btn {
+    display: inline-block;
+    background: var(--brass);
+    color: var(--pine);
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    padding: 14px 30px;
+    border-radius: 999px;
+  }
+  .btn:hover { background: var(--cream); }
+  .btn.quiet { background: transparent; color: var(--cream); border: 1px solid var(--hairline); }
+  .btn.quiet:hover { border-color: var(--brass); color: var(--brass); background: transparent; }
+  .reassure {
+    margin-top: 28px;
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 380;
+    font-size: 0.95rem;
+    color: var(--dim);
+    animation: rise 0.7s 0.38s ease both;
+  }
+
+  /* ---------- The lit transcript ---------- */
+  .transcript {
+    position: relative;
+    z-index: 0;
+    background: var(--paper);
+    border-radius: 8px;
+    box-shadow: 0 40px 90px rgba(0, 0, 0, 0.55);
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    line-height: 1.8;
+    color: var(--ink);
+    overflow: visible;
+    animation: rise 0.8s 0.3s ease both;
+  }
+  /* The lamp. The one warm glow on an otherwise dark page. */
+  .transcript::before {
+    content: "";
+    position: absolute;
+    inset: -90px -70px;
+    z-index: -1;
+    background: radial-gradient(closest-side, rgba(198, 154, 93, 0.20), rgba(198, 154, 93, 0) 72%);
+    animation: warm 1.4s 0.45s ease both;
+  }
+  .transcript .t-head {
+    padding: 13px 22px;
+    background: var(--paper-edge);
+    border-radius: 8px 8px 0 0;
+    border-bottom: 1px solid var(--paper-rule);
+    color: #8A7343;
+    font-weight: 500;
+    font-size: 0.66rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  /* white-space: pre keeps the conflict markers on their own lines and keeps
+     the two-space indent. Without it the transcript collapses into one
+     paragraph, which is a different kind of unresolved. */
+  .transcript .t-body { padding: 22px 24px 26px; overflow-x: auto; white-space: pre; }
+  .transcript .marker { font-weight: 500; }
+  .transcript .head-side { color: var(--head); }
+  .transcript .inc-side { color: var(--incoming); }
+  .transcript .sep { color: #8A8677; }
+  .transcript .therapist {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px dashed var(--paper-rule);
+    white-space: normal;   /* opt back out of the pre above; this part wraps */
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 0.99rem;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+  .transcript .therapist .who {
+    display: block;
+    margin-bottom: 6px;
+    font-family: var(--mono);
+    font-style: normal;
+    font-weight: 500;
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #8A7343;
+  }
+
+  @keyframes rise { from { opacity: 0; transform: translateY(16px); } }
+  @keyframes warm { from { opacity: 0; } }
+
+  /* ---------- Sections ---------- */
+  section { padding: 108px 0; }
+  section.tinted { background: var(--pine-soft); border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); }
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: var(--mono);
+    font-weight: 500;
+    font-size: 0.68rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--brass);
+  }
+  .eyebrow::before { content: ""; width: 34px; height: 1px; background: var(--brass); }
+  h2 {
+    margin-top: 20px;
+    font-family: var(--serif);
+    font-optical-sizing: auto;
+    font-weight: 350;
+    font-size: clamp(1.9rem, 3.2vw, 2.7rem);
+    line-height: 1.15;
+    letter-spacing: -0.008em;
+  }
+  .section-lede { margin-top: 16px; font-size: 1.05rem; color: var(--dim); max-width: 56ch; }
+
+  /* Approach */
+  .approach { margin-top: 58px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 44px; }
+  .app-card { padding-top: 26px; border-top: 1px solid var(--hairline); }
+  .leaf { color: var(--brass); font-size: 1.05rem; }
+  .app-card h3 {
+    margin: 14px 0 10px;
+    font-family: var(--serif);
+    font-weight: 430;
+    font-size: 1.28rem;
+    letter-spacing: -0.005em;
+  }
+  .app-card p { color: var(--dim); font-size: 0.98rem; }
+
+  /* Services */
+  .services { margin-top: 58px; display: grid; grid-template-columns: repeat(3, 1fr); }
+  .svc { padding: 0 38px; border-left: 1px solid var(--hairline); }
+  .svc:first-child { padding-left: 0; border-left: none; }
+  .svc:last-child { padding-right: 0; }
+  .svc .fmt {
+    font-family: var(--mono);
+    font-weight: 500;
+    font-size: 0.66rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--brass);
+    margin-bottom: 16px;
+  }
+  .svc h3 {
+    font-family: var(--serif);
+    font-weight: 430;
+    font-size: 1.3rem;
+    letter-spacing: -0.005em;
+    margin-bottom: 12px;
+  }
+  .svc p { color: var(--dim); font-size: 0.97rem; }
+  .svc .dur {
+    margin-top: 20px;
+    padding-top: 14px;
+    border-top: 1px solid var(--hairline);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--dim);
+  }
+
+  /* Expect */
+  .expect { margin-top: 52px; list-style: none; max-width: 64ch; }
+  .expect li { position: relative; padding-left: 36px; margin-bottom: 24px; }
+  .expect li::before { content: "—"; position: absolute; left: 0; color: var(--brass); }
+
+  /* Quotes */
+  .quotes { display: grid; grid-template-columns: 1fr 1fr; gap: 52px 60px; }
+  .quote p {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 380;
+    font-size: 1.22rem;
+    line-height: 1.55;
+    letter-spacing: -0.002em;
+  }
+  .quote cite {
+    display: block;
+    margin-top: 14px;
+    font-family: var(--mono);
+    font-style: normal;
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+
+  /* Booking / crisis */
+  .crisis {
+    margin-top: 56px;
+    max-width: 680px;
+    background: #241E14;
+    border: 1px solid #3C3320;
+    border-radius: 8px;
+    padding: 32px 36px;
+  }
+  .crisis h3 { font-family: var(--serif); font-weight: 430; font-size: 1.3rem; margin-bottom: 10px; }
+  .crisis p { color: var(--dim); font-size: 0.97rem; }
+  .crisis .line {
+    margin-top: 20px;
+    width: fit-content;
+    font-family: var(--mono);
+    font-size: 0.9rem;
+    color: var(--brass);
+    background: #141A15;
+    border-radius: 6px;
+    padding: 13px 18px;
+  }
+  .crisis .line + .line { margin-top: 10px; }
+
+  .housecall {
+    margin-top: 30px;
+    max-width: 62ch;
+    color: var(--dim);
+    font-size: 0.97rem;
+  }
+  .housecall code {
+    font-family: var(--mono);
+    font-size: 0.85em;
+    color: var(--brass);
+    background: #141A15;
+    border-radius: 4px;
+    padding: 2px 7px;
+    white-space: nowrap;
+  }
+
+  /* ---------- Footer ---------- */
+  footer { border-top: 1px solid var(--hairline); padding: 64px 0 76px; }
+  footer .fine { font-size: 0.85rem; color: var(--dim); line-height: 1.85; max-width: 74ch; }
+  footer .sig { margin-top: 26px; font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 1.05rem; color: var(--cream); }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 920px) {
+    .hero { grid-template-columns: 1fr; gap: 64px; padding-top: 72px; padding-bottom: 96px; }
+    .approach { grid-template-columns: 1fr; gap: 34px; }
+    .services { grid-template-columns: 1fr; }
+    .svc { padding: 30px 0; border-left: none; border-top: 1px solid var(--hairline); }
+    .svc:first-child { padding-top: 0; border-top: none; }
+    .quotes { grid-template-columns: 1fr; gap: 40px; }
+    section { padding: 84px 0; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap masthead">
+    <a class="brand" href="#">Merge Conflict <span>Counselling</span></a>
+    <nav aria-label="Main">
+      <a href="#approach">Our approach</a>
+      <a href="#services">Sessions</a>
+      <a href="#expect">What to expect</a>
+      <a class="nav-cta" href="#book">Book a session</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <div>
+      <h1>Every conflict has three sides. Yours, theirs, and the <em>common ancestor's.</em></h1>
+      <p class="lede">We provide a calm, judgement-free space for branches in conflict. We are not here to decide who is right. We are here to decide who rebases.</p>
+      <div class="cta-row">
+        <a class="btn" href="#book">Book a session</a>
+        <a class="btn quiet" href="#approach">How it works</a>
+      </div>
+      <p class="reassure">Conflicts are normal. Conflicts are healthy. Conflicts are currently blocking the release, which is why you are here.</p>
+    </div>
+
+    <div class="transcript" role="img" aria-label="A counselling session transcript formatted as a git merge conflict">
+      <div class="t-head"><span>Session transcript</span><span>Week 4</span></div>
+      <div class="t-body">
+<span class="marker head-side">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</span>
+<span class="head-side">  "I renamed it processOrder,</span>
+<span class="head-side">   because that is what it does."</span>
+<span class="marker sep">=======</span>
+<span class="inc-side">  "I renamed it handleOrder,</span>
+<span class="inc-side">   because that is what it does."</span>
+<span class="marker inc-side">&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/checkout</span>
+        <div class="therapist">
+          <span class="who">Therapist</span>
+          "I'm hearing that you both care deeply about what it does. Let's sit with that. Let's also hear from the common ancestor, who remembers when it was called doStuff."
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="tinted" id="approach">
+    <div class="wrap">
+      <div class="eyebrow">Our approach</div>
+      <h2>Evidence-adjacent methods, delivered gently</h2>
+      <p class="section-lede">Our practitioners are trained in modern conflict resolution and at least one version control system each.</p>
+      <div class="approach">
+        <div class="app-card">
+          <div class="leaf" aria-hidden="true">&#10047;</div>
+          <h3>Three-way empathy</h3>
+          <p>We always involve the common ancestor. You have both changed since then. That is allowed. That is growth. That is also the problem.</p>
+        </div>
+        <div class="app-card">
+          <div class="leaf" aria-hidden="true">&#10047;</div>
+          <h3>Non-violent conflict markers</h3>
+          <p>The markers are not walls. They are boundaries, and boundaries are healthy. Nobody is "less than", except in the diff, syntactically.</p>
+        </div>
+        <div class="app-card">
+          <div class="leaf" aria-hidden="true">&#10047;</div>
+          <h3>Acceptance work</h3>
+          <p>Sometimes both changes are valid. Sometimes neither is. Sometimes the healthiest resolution is deleting the file and sitting quietly.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="services">
+    <div class="wrap">
+      <div class="eyebrow">Sessions</div>
+      <h2>Formats of care</h2>
+      <p class="section-lede">All sessions are 50 minutes, like a sprint that respects you.</p>
+      <div class="services">
+        <div class="svc">
+          <div class="fmt">Individual</div>
+          <h3>You and your uncommitted feelings</h3>
+          <p>For the developer holding changes they are afraid to push. We explore why. The answer is usually the reviewer.</p>
+          <div class="dur">50 min. Stash beforehand if needed.</div>
+        </div>
+        <div class="svc">
+          <div class="fmt">Couples</div>
+          <h3>HEAD and incoming</h3>
+          <p>Our core practice. Two branches, one file, irreconcilable opinions about naming. We facilitate. The working tree is a safe space.</p>
+          <div class="dur">50 min. Both parties must be fetched.</div>
+        </div>
+        <div class="svc">
+          <div class="fmt">Group</div>
+          <h3>The monorepo circle</h3>
+          <p>For teams whose conflicts have conflicts. Chairs are arranged in a directed acyclic graph. Everyone gets to speak, in topological order.</p>
+          <div class="dur">50 min. Attendance is eventually consistent.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="tinted" id="expect">
+    <div class="wrap">
+      <div class="eyebrow">What to expect</div>
+      <h2>Your first session</h2>
+      <ul class="expect">
+        <li>Each branch reads its version aloud. No interrupting. No force-pushing while the other is speaking.</li>
+        <li>The therapist asks how that made HEAD feel. HEAD is encouraged to use "I" statements, such as "I am detached".</li>
+        <li>Together we identify what you are really fighting about. It is never the code. It is respect, recognition, and one comment from a review in 2024.</li>
+        <li>Homework is assigned. It is usually "talk to each other before opening the pull request". Nobody does it. We assign it anyway, gently.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="eyebrow">Outcomes</div>
+      <h2>Words from former conflicts</h2>
+      <div class="quotes" style="margin-top: 52px;">
+        <div class="quote">
+          <p>"After six sessions, we finally merged. We kept both implementations. Neither is called. We are at peace."</p>
+          <cite>Backend team, fintech</cite>
+        </div>
+        <div class="quote">
+          <p>"Our therapist taught us that --ours and --theirs are not identities. They are strategies. I still think about that."</p>
+          <cite>Anonymous, platform engineering</cite>
+        </div>
+        <div class="quote">
+          <p>"We came in fighting about tabs and spaces. We left understanding it was never about whitespace. It was about my father, who also used tabs."</p>
+          <cite>Staff engineer</cite>
+        </div>
+        <div class="quote">
+          <p>"They let the common ancestor speak for the first time. There wasn't a dry eye in the repository."</p>
+          <cite>Open source maintainer</cite>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="tinted" id="book">
+    <div class="wrap">
+      <div class="eyebrow">Booking</div>
+      <h2>We have availability</h2>
+      <p class="section-lede">We always have availability. Conflicts are constant. It is the one thing we can promise you.</p>
+      <div class="crisis">
+        <h3>In crisis right now?</h3>
+        <p>If you are currently in a detached HEAD state, do not attempt to resolve alone. Our crisis line is staffed around the clock by counsellors who will stay with you until you are safely on a named branch.</p>
+        <div class="line">git checkout -b somewhere-safe</div>
+        <div class="line">curl mergeconflictcounselling.com/crisis</div>
+      </div>
+      <p class="housecall">We also make house calls. <code>counsel</code>, our mergetool, will sit with you and your conflict in the terminal, hear both sides in full, and leave the resolution where it belongs: with you. <code>curl -fsS mergeconflictcounselling.com/counsel</code> to bring the practice home.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fine">
+      Merge Conflict Counselling is not a licensed therapeutic practice, a licensed anything, or affiliated with git, which has never asked for help and never will. Sessions are confidential and append-only. We do not offer cherry-picking, as we believe every commit deserves to be seen in context.
+    </div>
+    <div class="sig">— The Practice</div>
+  </div>
+</footer>
+
+</body>
+</html>

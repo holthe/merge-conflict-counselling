@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <title>Merge Conflict Counselling</title>
+  <!-- Three conflict-marker chevrons, brass on pine. Seven would be
+       accurate and illegible. -->
+  <rect width="64" height="64" fill="#17211B"/>
+  <g fill="none" stroke="#C69A5D" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="23,21 12,32 23,43"/>
+    <polyline points="37,21 26,32 37,43"/>
+    <polyline points="51,21 40,32 51,43"/>
+  </g>
+</svg>
