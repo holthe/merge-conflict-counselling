@@ -353,6 +353,8 @@
   .crisis .line {
     margin-top: 20px;
     width: fit-content;
+    max-width: 100%;
+    overflow-wrap: anywhere;   /* long URLs must bend rather than protrude */
     font-family: var(--mono);
     font-size: 0.9rem;
     color: var(--brass);
@@ -375,7 +377,11 @@
     background: #141A15;
     border-radius: 4px;
     padding: 2px 7px;
-    white-space: nowrap;
+    overflow-wrap: anywhere;
+    /* when the chip wraps, give each line fragment its own padding and
+       rounded corners instead of one long smear */
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
   }
 
   /* ---------- Footer ---------- */
