@@ -65,7 +65,13 @@
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  html { scroll-behavior: smooth; background: var(--pine); }
+  /* overflow-x clip: the transcript's lamp-glow ::before bleeds 70px past
+     the card on purpose; on narrow screens that bleed passes the viewport
+     edge and, unclipped, makes the whole page scroll sideways. clip (with
+     hidden as the older-browser fallback) swallows the bleed without
+     creating a scroll container. */
+  html { scroll-behavior: smooth; background: var(--pine); overflow-x: hidden; overflow-x: clip; }
+  body { overflow-x: hidden; overflow-x: clip; }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     *, *::before, *::after { animation: none !important; transition: none !important; }
