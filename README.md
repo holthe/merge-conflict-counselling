@@ -289,9 +289,11 @@ Until then the site is reachable at `mergeconflictcounselling.pages.dev`.
 
 ### Related
 
-Best Effort Industries lists this as division 005, currently **Coming soon**.
-Taking it live is a four-step edit to the table in that repository's
-`index.html`; the procedure is in an HTML comment directly above the table.
+Merge Conflict Counselling is a division of
+[Best Effort Industries](https://besteffortindustries.com). Division
+numbers are assigned by the register in that repository's `index.html`,
+on entry into service, and are recorded nowhere else; this repository
+keeps no copy, so there is nothing here to conflict with.
 
 ## License
 
